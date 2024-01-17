@@ -1,0 +1,8 @@
+campaign:
+  storageSite: T2_CH_CERN
+  outLFNDirBase: /store/group/phys_higgs/vbfhiggs
+  tag_extension: NanoV12
+  config: utils/nano_data_2022_CDE_NANO.py
+  data: True
+  # datasets: /JetMET/Run2022C-22Sep2023-v1/MINIAOD #example to run on one sample only
+  datasets: datasets/data_2022_CD.txt

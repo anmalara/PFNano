@@ -1,0 +1,2 @@
+export PFNANO_PATH=$(pwd -L)
+export PYTHONPATH=${PFNANO_PATH}:${PYTHONPATH}
