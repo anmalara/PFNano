@@ -25,7 +25,7 @@ There are python config files ready to run in `PhysicsTools/PFNano/utils/`.
 
 To create the list of samples to run on, modify as it fits and then run:
 ```
-./utils/das_utils.py
+./utils/create_cards.py
 ```
 
 To create the driver to produce nano files, modify as it fits and then run:
