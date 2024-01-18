@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import os
 from utils.colors import green, blue
@@ -26,13 +26,12 @@ def create_driver(name, info):
 
 
 def run_data():
-    datasets = ["JetHT", "MET", "JetMET", "JetMET0", "JetMET1", "EGamma", "EGamma0", "EGamma1", "Muon", "Muon0", "Muon1"]
     year_run_map = {
         "2022_CDE": {"GT": "130X_dataRun3_v2", "type": "data"},
         "2022_FG": {"GT": "130X_dataRun3_PromptAnalysis_v1", "type": "data"},
         "2023_CD": {"GT": "130X_dataRun3_PromptAnalysis_v1", "type": "data"},
-        "Run3": {"GT": "130X_mcRun3_2022_realistic_v5", "type": "mc"},
-        "Run3_EE": {"GT": "130X_mcRun3_2022_realistic_postEE_v6", "type": "mc"},
+        "2022": {"GT": "130X_mcRun3_2022_realistic_v5", "type": "mc"},
+        "2022_EE": {"GT": "130X_mcRun3_2022_realistic_postEE_v6", "type": "mc"},
     }
     for name, info in year_run_map.items():
         create_driver(name=name, info=info)

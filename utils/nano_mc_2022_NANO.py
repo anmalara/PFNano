@@ -2,7 +2,7 @@
 # using:
 # Revision: 1.19
 # Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
-# with command line options: nano_mc_Run3 --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --step NANO --conditions 130X_mcRun3_2022_realistic_v5 --era Run3 --nThreads 4 -n -1 --no_exec --customise=PhysicsTools/PFNano/puppiJetMETReclustering_cff.nanoPuppiReclusterCustomize_MC --customise=PhysicsTools/PFNano/pfnano_cff.PFnano_customizeMC --customise_commands=process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False)));process.MessageLogger.cerr.FwkReport.reportEvery=1000;process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)
+# with command line options: nano_mc_2022 --mc --eventcontent NANOAODSIM --datatier NANOAODSIM --step NANO --conditions 130X_mcRun3_2022_realistic_v5 --era Run3 --nThreads 4 -n -1 --no_exec --customise=PhysicsTools/PFNano/puppiJetMETReclustering_cff.nanoPuppiReclusterCustomize_MC --customise=PhysicsTools/PFNano/pfnano_cff.PFnano_customizeMC --customise_commands=process.add_(cms.Service('InitRootHandlers', EnableIMT = cms.untracked.bool(False)));process.MessageLogger.cerr.FwkReport.reportEvery=1000;process.NANOAODSIMoutput.fakeNameForCrab = cms.untracked.bool(True)
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Run3_cff import Run3
@@ -22,14 +22,13 @@ process.load("Configuration.StandardSequences.EndOfProcess_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 process.maxEvents = cms.untracked.PSet(
-    input=cms.untracked.int32(-1),
-    output=cms.optional.untracked.allowed(cms.int32, cms.PSet),
+    input=cms.untracked.int32(-1), output=cms.optional.untracked.allowed(cms.int32, cms.PSet)
 )
 
 # Input source
 process.source = cms.Source(
     "PoolSource",
-    fileNames=cms.untracked.vstring("file:nano_mc_Run3_PAT.root"),
+    fileNames=cms.untracked.vstring("file:nano_mc_2022_PAT.root"),
     secondaryFileNames=cms.untracked.vstring(),
 )
 
@@ -45,9 +44,7 @@ process.options = cms.untracked.PSet(
     dumpOptions=cms.untracked.bool(False),
     emptyRunLumiMode=cms.obsolete.untracked.string,
     eventSetup=cms.untracked.PSet(
-        forceNumberOfConcurrentIOVs=cms.untracked.PSet(
-            allowAnyLabel_=cms.required.untracked.uint32,
-        ),
+        forceNumberOfConcurrentIOVs=cms.untracked.PSet(allowAnyLabel_=cms.required.untracked.uint32),
         numberOfConcurrentIOVs=cms.untracked.uint32(0),
     ),
     fileMode=cms.untracked.string("FULLMERGE"),
@@ -67,7 +64,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation=cms.untracked.string("nano_mc_Run3 nevts:-1"),
+    annotation=cms.untracked.string("nano_mc_2022 nevts:-1"),
     name=cms.untracked.string("Applications"),
     version=cms.untracked.string("$Revision: 1.19 $"),
 )
@@ -79,10 +76,9 @@ process.NANOAODSIMoutput = cms.OutputModule(
     compressionAlgorithm=cms.untracked.string("LZMA"),
     compressionLevel=cms.untracked.int32(9),
     dataset=cms.untracked.PSet(
-        dataTier=cms.untracked.string("NANOAODSIM"),
-        filterName=cms.untracked.string(""),
+        dataTier=cms.untracked.string("NANOAODSIM"), filterName=cms.untracked.string("")
     ),
-    fileName=cms.untracked.string("nano_mc_Run3_NANO.root"),
+    fileName=cms.untracked.string("nano_mc_2022_NANO.root"),
     outputCommands=process.NANOAODSIMEventContent.outputCommands,
 )
 

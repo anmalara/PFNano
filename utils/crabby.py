@@ -29,25 +29,14 @@ def rnd_str(N, seedstr="test"):
     return "".join(random.choice(letters) for _ in range(N))
 
 
-def str2bool(v):
-    if isinstance(v, bool):
-        return v
-    if v.lower() in ("yes", "true", "t", "y", "1"):
-        return True
-    elif v.lower() in ("no", "false", "f", "n", "0"):
-        return False
-    else:
-        raise argparse.ArgumentTypeError("Boolean value expected.")
-
-
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run analysis on baconbits files using processor coffea files")
+    parser = argparse.ArgumentParser(description="Submit jobs")
     parser.add_argument("-c", "--card", dest="card", default="utils/config_mc.yml", help="Crab yaml card")
     parser.add_argument("-m", "--make", action="store_true", help="Make crab configs according to the spec.")
     parser.add_argument("--submit", action="store_true", help="Submit configs created by ``--make``.")
     parser.add_argument("--resubmit", action="store_true", help="Submit configs created by ``--make``.")
-    parser.add_argument("--status", action="store_true", help="Run `crab submit` but filter for only status info. Creates a list of DAS names.")
-    parser.add_argument("--test", type=str2bool, default="False", choices={True, False}, help="Test submit - only 1 file, don't publish.")
+    parser.add_argument("--status", action="store_true", help="Run `crab submit` and print nicely.")
+    parser.add_argument("--test", action="store_true", help="Test submit - only 1 file, don't publish.")
     args = parser.parse_args()
     return args
 
@@ -56,11 +45,12 @@ def main():
     args = parse_args()
     with open(args.card, "r") as f:
         card = yaml.safe_load(f)
+        card = card["campaign"]
 
     template_crab = "utils/template_crab.py"
-    tag_extension = card["campaign"]["tag_extension"]
-    datasets_name = card["campaign"]["datasets"]
-    isData = card["campaign"]["data"]
+    tag_extension = card["tag_extension"]
+    datasets_name = card["datasets"]
+    isData = card["data"]
     work_area = f"./work_area/{tag_extension}"
     print(cyan(f"Working area: {work_area}"))
     if os.path.isdir(work_area):
@@ -100,10 +90,10 @@ def main():
             card_info = {
                 "_requestName_": request_name,
                 "_workArea_": work_area,
-                "_psetName_": card["campaign"]["config"],
+                "_psetName_": card["config"],
                 "_inputDataset_": dataset,
-                "_outLFNDirBase_": f"{card['campaign']['outLFNDirBase']}/{tag_extension}/",
-                "_storageSite_": card["campaign"]["storageSite"],
+                "_outLFNDirBase_": f"{card['outLFNDirBase']}/{tag_extension}/",
+                "_storageSite_": card["storageSite"],
                 "_publication_": "True",
                 "_splitting_": "FileBased",
                 "_unitsPerJob_": "1",
@@ -135,12 +125,24 @@ def main():
             if args.resubmit:
                 mode = "resubmit"
             print(green(f"{mode.capitalize()}ting configs:"))
-            config_module = importlib.import_module(cfg_filename.replace("/", ".").replace(".py", "").lstrip(".."))
+            config_module = importlib.import_module(
+                cfg_filename.replace("/", ".").replace(".py", "").lstrip("..")
+            )
             p = Process(target=run_crab_command, kwargs={"command": mode, "config": config_module.config})
             p.start()
             p.join()
 
         if args.status:
+            status_cases = [
+                "unsubmitted",
+                "idle",
+                "finished",
+                "running",
+                "transferred",
+                "transferring",
+                "unsubmitted",
+                "failed",
+            ]
             cfg_dir = os.path.join(work_area, "crab_" + request_name)
             o = os.popen("crab status " + cfg_dir).read().split("\n")
             for i, line in enumerate(o):
@@ -150,7 +152,7 @@ def main():
                     for j in range(5):
                         if len(o[i + j]) < 2:
                             continue
-                        if any(s in o[i + j] for s in ["unsubmitted", "idle", "finished", "running", "transferred", "transferring", "unsubmitted", "failed"]):
+                        if any(s in o[i + j] for s in status_cases):
                             print(orange(o[i + j]))
 
                 if "Output dataset:" in line:

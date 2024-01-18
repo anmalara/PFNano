@@ -44,9 +44,7 @@ process.options = cms.untracked.PSet(
     dumpOptions=cms.untracked.bool(False),
     emptyRunLumiMode=cms.obsolete.untracked.string,
     eventSetup=cms.untracked.PSet(
-        forceNumberOfConcurrentIOVs=cms.untracked.PSet(
-            allowAnyLabel_=cms.required.untracked.uint32,
-        ),
+        forceNumberOfConcurrentIOVs=cms.untracked.PSet(allowAnyLabel_=cms.required.untracked.uint32),
         numberOfConcurrentIOVs=cms.untracked.uint32(0),
     ),
     fileMode=cms.untracked.string("FULLMERGE"),

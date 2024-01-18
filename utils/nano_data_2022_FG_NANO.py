@@ -21,8 +21,7 @@ process.load("Configuration.StandardSequences.EndOfProcess_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 process.maxEvents = cms.untracked.PSet(
-    input=cms.untracked.int32(-1),
-    output=cms.optional.untracked.allowed(cms.int32, cms.PSet),
+    input=cms.untracked.int32(-1), output=cms.optional.untracked.allowed(cms.int32, cms.PSet)
 )
 
 # Input source
@@ -44,9 +43,7 @@ process.options = cms.untracked.PSet(
     dumpOptions=cms.untracked.bool(False),
     emptyRunLumiMode=cms.obsolete.untracked.string,
     eventSetup=cms.untracked.PSet(
-        forceNumberOfConcurrentIOVs=cms.untracked.PSet(
-            allowAnyLabel_=cms.required.untracked.uint32,
-        ),
+        forceNumberOfConcurrentIOVs=cms.untracked.PSet(allowAnyLabel_=cms.required.untracked.uint32),
         numberOfConcurrentIOVs=cms.untracked.uint32(0),
     ),
     fileMode=cms.untracked.string("FULLMERGE"),
@@ -77,10 +74,7 @@ process.NANOAODoutput = cms.OutputModule(
     "NanoAODOutputModule",
     compressionAlgorithm=cms.untracked.string("LZMA"),
     compressionLevel=cms.untracked.int32(9),
-    dataset=cms.untracked.PSet(
-        dataTier=cms.untracked.string("NANOAOD"),
-        filterName=cms.untracked.string(""),
-    ),
+    dataset=cms.untracked.PSet(dataTier=cms.untracked.string("NANOAOD"), filterName=cms.untracked.string("")),
     fileName=cms.untracked.string("nano_data_2022_FG_NANO.root"),
     outputCommands=process.NANOAODEventContent.outputCommands,
 )
