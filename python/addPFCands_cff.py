@@ -3,11 +3,13 @@ from PhysicsTools.NanoAOD.common_cff import Var, CandVars
 
 
 def addPFCands(process, runOnMC=False):
-    cut = "( (fromPV() >= 3) && ( pt > 0.2 ) )"
-    cut += " && ( (pdgId != 22)  || (pt > 0.8) )"  # pt cut on photons
-    cut += " && ( (pdgId != 130) || (pt > 2.5) )"  # pt cut on neutral hadrons
-    cut += " && ( (pdgId != 1)   || (pt > 2.5) )"  # pt cut on HF hadronic
-    cut += " && ( (pdgId != 2)   || (pt > 2.5) )"  # pt cut on HF EM
+    cut = "     ( (fromPV()   <=  3 ) || ( pt > 0.1  ) )"
+    cut += " && ( (fromPV()   >=  2 ) || ( pt > 3    ) )"
+    cut += " && ( (abs(pdgId) != 22 ) || ( pt > 0.8  ) )"  # pt cut on photons
+    cut += " && ( (abs(pdgId) != 130) || ( pt > 2.0  ) )"  # pt cut on neutral hadrons
+    cut += " && ( (abs(pdgId) != 1  ) || ( pt > 2.5  ) )"  # pt cut on HF hadronic
+    cut += " && ( (abs(pdgId) != 2  ) || ( pt > 2.5  ) )"  # pt cut on HF EM
+    cut += " && ( (abs(pdgId) != 211) || ( pt*puppiWeight > 0.01 ) )"  # pt cut on charged hadron
 
     process.customizedPFCandsTask = cms.Task()
     process.schedule.associate(process.customizedPFCandsTask)
@@ -23,9 +25,14 @@ def addPFCands(process, runOnMC=False):
         variables=cms.PSet(
             CandVars,
             puppiWeight=Var("puppiWeight()", float, doc="Puppi weight", precision=10),
-            puppiWeightNoLep=Var("puppiWeightNoLep()", float, doc="Puppi weight removing leptons", precision=10),
+            puppiWeightNoLep=Var("puppiWeightNoLep()", float, doc="puppiWeightNoLep", precision=10),
             vtxChi2=Var("?hasTrackDetails()?vertexChi2():-1", float, doc="vertex chi2", precision=10),
-            trkChi2=Var("?hasTrackDetails()?pseudoTrack().normalizedChi2():-1", float, doc="normalized trk chi2", precision=10),
+            trkChi2=Var(
+                "?hasTrackDetails()?pseudoTrack().normalizedChi2():-1",
+                float,
+                doc="normalized trk chi2",
+                precision=10,
+            ),
             dz=Var("?hasTrackDetails()?dz():-1", float, doc="pf dz", precision=10),
             dzErr=Var("?hasTrackDetails()?dzError():-1", float, doc="pf dz err", precision=10),
             d0=Var("?hasTrackDetails()?dxy():-1", float, doc="pf d0", precision=10),
@@ -36,13 +43,21 @@ def addPFCands(process, runOnMC=False):
                 doc="primary vertex association quality. 0: NotReconstructedPrimary, 1: OtherDeltaZ, 4: CompatibilityBTag, 5: CompatibilityDz, 6: UsedInFitLoose, 7: UsedInFitTight",
             ),
             lostInnerHits=Var(
-                "lostInnerHits()", int, doc="lost inner hits. -1: validHitInFirstPixelBarrelLayer, 0: noLostInnerHits, 1: oneLostInnerHit, 2: moreLostInnerHits"
+                "lostInnerHits()",
+                int,
+                doc="lost inner hits. -1: validHitInFirstPixelBarrelLayer, 0: noLostInnerHits, 1: oneLostInnerHit, 2: moreLostInnerHits",
             ),
-            lostOuterHits=Var("?hasTrackDetails()?pseudoTrack().hitPattern().numberOfLostHits('MISSING_OUTER_HITS'):0", int, doc="lost outer hits"),
+            lostOuterHits=Var(
+                "?hasTrackDetails()?pseudoTrack().hitPattern().numberOfLostHits('MISSING_OUTER_HITS'):0",
+                int,
+                doc="lost outer hits",
+            ),
             numberOfHits=Var("numberOfHits()", int, doc="number of hits"),
             numberOfPixelHits=Var("numberOfPixelHits()", int, doc="number of pixel hits"),
             trkQuality=Var("?hasTrackDetails()?pseudoTrack().qualityMask():0", int, doc="track quality mask"),
-            trkHighPurity=Var("?hasTrackDetails()?pseudoTrack().quality('highPurity'):0", bool, doc="track is high purity"),
+            trkHighPurity=Var(
+                "?hasTrackDetails()?pseudoTrack().quality('highPurity'):0", bool, doc="track is high purity"
+            ),
             trkAlgo=Var("?hasTrackDetails()?pseudoTrack().algo():-1", int, doc="track algorithm"),
             trkP=Var("?hasTrackDetails()?pseudoTrack().p():-1", float, doc="track momemtum", precision=-1),
             trkPt=Var("?hasTrackDetails()?pseudoTrack().pt():-1", float, doc="track pt", precision=-1),
@@ -75,5 +90,34 @@ def addPFCands(process, runOnMC=False):
             maxLen=cms.uint32(500),
         )
         process.customizedPFCandsTask.add(process.genJetsParticleTable)
+
+    process = addEventFilter(process, runOnMC=runOnMC)
+    return process
+
+
+def addEventFilter(process, runOnMC):
+    process.nanoFilter = cms.EDFilter(
+        "NanoFilter",
+        jets=cms.InputTag("linkedObjects", "jets"),
+        met=cms.InputTag("slimmedMETs"),
+        electrons=cms.InputTag("linkedObjects", "electrons"),
+        muons=cms.InputTag("linkedObjects", "muons"),
+        photons=cms.InputTag("linkedObjects", "photons"),
+        metPtMin=cms.double(100.0),
+        nJetMin=cms.uint32(2),
+        jetPtMin=cms.double(20.0),
+        electronPtMin=cms.double(20.0),
+        muonPtMin=cms.double(20.0),
+        photonPtMin=cms.double(150.0),
+    )
+
+    if runOnMC:
+        process.nanoSequenceMC.insert(
+            process.nanoSequenceMC.index(process.nanoSequenceCommon) + 1, process.nanoFilter
+        )
+    else:
+        process.nanoSequence.insert(
+            process.nanoSequence.index(process.nanoSequenceCommon) + 1, process.nanoFilter
+        )
 
     return process

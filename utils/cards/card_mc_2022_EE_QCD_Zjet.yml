@@ -1,0 +1,7 @@
+campaign:
+  config: utils/nano_mc_2022_EE_NANO.py
+  data: false
+  datasets: datasets/mc_2022_EE_QCD_Zjet.txt
+  outLFNDirBase: /store/group/phys_higgs/vbfhiggs
+  storageSite: T2_CH_CERN
+  tag_extension: NanoV12

@@ -81,6 +81,7 @@ process.NANOAODoutput = cms.OutputModule(
     ),
     fileName=cms.untracked.string("nano_data_2022_CDE_NANO.root"),
     outputCommands=process.NANOAODEventContent.outputCommands,
+    SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring("nanoAOD_step")),
 )
 
 # Additional output definition

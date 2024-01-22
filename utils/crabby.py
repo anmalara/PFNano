@@ -145,6 +145,7 @@ def main():
             ]
             cfg_dir = os.path.join(work_area, "crab_" + request_name)
             o = os.popen("crab status " + cfg_dir).read().split("\n")
+
             for i, line in enumerate(o):
                 if line.startswith("CRAB project directory:"):
                     print(blue(line))  # in python3, print(line) replaces print line
@@ -155,9 +156,12 @@ def main():
                         if any(s in o[i + j] for s in status_cases):
                             print(orange(o[i + j]))
 
-                if "Output dataset:" in line:
+                if "Output dataset" in line:
                     das_name = line.split()[-1]
-                    print(green(das_name))
+                    if "DAS URL" in line:
+                        print(green(f" --> link: {das_name}"))
+                    else:
+                        print(green(f" --> Published in: {das_name}"))
 
 
 if __name__ == "__main__":
