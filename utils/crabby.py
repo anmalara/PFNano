@@ -51,11 +51,13 @@ def main():
     tag_extension = card["tag_extension"]
     datasets_name = card["datasets"]
     isData = card["data"]
-    work_area = f"./work_area/{tag_extension}"
+    work_area = f"./work_area/{tag_extension}/" + os.path.basename(card["config"]).replace(
+        "_NANO", ""
+    ).replace(".py", "/")
     print(cyan(f"Working area: {work_area}"))
     if os.path.isdir(work_area):
         if args.submit or args.make:
-            if input(yellow("``workArea: {}`` already exists. Continue? (y/n)".format(work_area))) != "y":
+            if input(yellow(f"``workArea: {work_area}`` already exists. Continue? (y/n)")) != "y":
                 exit()
     os.makedirs(work_area, exist_ok=True)
 
@@ -85,8 +87,13 @@ def main():
         else:
             request_name = dataset_name[:90] + rnd_str(8, dataset_name)
 
-        cfg_filename = os.path.join(work_area, "submit_{}.py".format(dataset_name))
+        cfg_filename = os.path.join(work_area, f"submit_{dataset_name}.py")
+        cfg_dir = os.path.join(work_area, "crab_" + request_name)
+
         if args.make:
+            if os.path.isdir(cfg_dir):
+                raise RuntimeError(f"Crab dir already exists: {cfg_dir}")
+            os.makedirs(cfg_dir, exist_ok=True)
             card_info = {
                 "_requestName_": request_name,
                 "_workArea_": work_area,
@@ -122,6 +129,8 @@ def main():
         if args.submit or args.resubmit:
             if args.submit:
                 mode = "submit"
+                if os.path.isdir(cfg_dir):
+                    os.rmdir(cfg_dir)
             if args.resubmit:
                 mode = "resubmit"
             print(green(f"{mode.capitalize()}ting configs:"))
@@ -143,7 +152,6 @@ def main():
                 "unsubmitted",
                 "failed",
             ]
-            cfg_dir = os.path.join(work_area, "crab_" + request_name)
             o = os.popen("crab status " + cfg_dir).read().split("\n")
 
             for i, line in enumerate(o):
