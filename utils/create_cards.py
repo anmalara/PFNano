@@ -138,6 +138,11 @@ def run_mc():
             # both names for Wminus are needed for the different campaigns
         ],
         # V+jet
+        "QCD_Znunu": [
+            f"Zto2Nu-2Jets_PTNuNu-{pt}_{nJ}_{tune_energy}_amcatnloFXFX-pythia8"
+            for nJ in njets
+            for pt in pts_vjet
+        ],
         "QCD_Zjet": [f"DYto2L-2Jets_MLL-50_0J_{tune_energy}_amcatnloFXFX-pythia8"]
         + [
             f"DYto2L-2Jets_MLL-50_PTLL-{pt}_{nJ}_{tune_energy}_amcatnloFXFX-pythia8"

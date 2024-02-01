@@ -74,10 +74,12 @@ def main():
         print(green("   ==> " + dataset))
         crab_config = copy.deepcopy(base_crab_config)
         infos = dataset.split("/")[1:2]
+        ver = dataset.split("/")[2].split("-")
         if not "SIM" in dataset.split("/")[-1]:
-            ver = dataset.split("/")[2].split("-")
             infos += ver[0:1]
             infos += ver[1].split("_")[1:]
+        if "_ext" in dataset:
+            infos += ver[1].split("_")[-1:]
         dataset_name = "_".join(infos)
 
         tag = f"{dataset.split('/')[2]}_{tag_extension}"
