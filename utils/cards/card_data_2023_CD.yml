@@ -2,6 +2,6 @@ campaign:
   config: utils/nano_data_2023_CD_NANO.py
   data: true
   datasets: datasets/data_2023_CD.txt
-  outLFNDirBase: /store/group/phys_higgs/vbfhiggs
-  storageSite: T2_CH_CERN
+  outLFNDirBase: /store/group/phys_higgs/hinv
+  storageSite: T2_BE_IIHE
   tag_extension: NanoV12

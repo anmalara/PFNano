@@ -1,7 +1,7 @@
 campaign:
-  config: utils/nano_mc_2022_NANO.py
+  config: utils/nano_mc_2023_BPix_NANO.py
   data: false
-  datasets: datasets/mc_2022_EWK_gjet.txt
+  datasets: datasets/mc_2023_BPix_ttbar.txt
   outLFNDirBase: /store/group/phys_higgs/hinv
   storageSite: T2_BE_IIHE
   tag_extension: NanoV12

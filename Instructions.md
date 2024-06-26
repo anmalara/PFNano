@@ -58,19 +58,20 @@ Remember to also define an EDFilter.
 
 ## Submission to CRAB
 
-For crab submission a handler script `utils/crabby.py`, a crab baseline template `utils/template_crab.py` are provided. Yaml files are also provided: one per `data/mc` and `year`: `config_{type}_{year}.yml`.
+For crab submission a handler script `utils/crabby.py`, a crab baseline template `utils/template_crab.py` are provided. 
+Yaml files are also provided: one per `data/mc`, `year` and sample: `card_{type}_{year}_{sample}.yml`.
 
 `crabby.py` has the following options:
 - make:
   ```
-  python3 utils/crabby.py -c utils/config_{type}_{year}.yml --make
+  python3 utils/crabby.py -c utils/cards/card_{type}_{year}_{sample}.yml --make
   ```
 - submit
   ```
-  python3 utils/crabby.py -c utils/config_{type}_{year}.yml --submit
+  python3 utils/crabby.py -c utils/cards/card_{type}_{year}_{sample}.yml --submit
   ```
 - resubmit
   ```
-  python3 utils/crabby.py -c utils/config_{type}_{year}.yml --resubmit
+  python3 utils/crabby.py -c utils/cards/card_{type}_{year}_{sample}.yml --resubmit
   ```
 - other options are not tested/supported yet.

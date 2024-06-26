@@ -2,6 +2,6 @@ campaign:
   config: utils/nano_mc_2022_EE_NANO.py
   data: false
   datasets: datasets/mc_2022_EE_Diboson.txt
-  outLFNDirBase: /store/group/phys_higgs/vbfhiggs
-  storageSite: T2_CH_CERN
+  outLFNDirBase: /store/group/phys_higgs/hinv
+  storageSite: T2_BE_IIHE
   tag_extension: NanoV12

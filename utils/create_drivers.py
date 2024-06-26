@@ -32,6 +32,8 @@ def run_data():
         "2023_CD": {"GT": "130X_dataRun3_PromptAnalysis_v1", "type": "data"},
         "2022": {"GT": "130X_mcRun3_2022_realistic_v5", "type": "mc"},
         "2022_EE": {"GT": "130X_mcRun3_2022_realistic_postEE_v6", "type": "mc"},
+        "2023": {"GT": "130X_mcRun3_2023_realistic_v14", "type": "mc"},
+        "2023_BPix": {"GT": "130X_mcRun3_2023_realistic_postBPix_v2", "type": "mc"},
     }
     for name, info in year_run_map.items():
         create_driver(name=name, info=info)

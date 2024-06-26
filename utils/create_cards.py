@@ -68,8 +68,10 @@ def create_card(driver_name, datasets, data):
 
     card_info = {
         "campaign": {
-            "storageSite": "T2_CH_CERN",
-            "outLFNDirBase": "/store/group/phys_higgs/vbfhiggs",
+            # "storageSite": "T2_CH_CERN",
+            # "outLFNDirBase": "/store/group/phys_higgs/vbfhiggs",
+            "storageSite": "T2_BE_IIHE",
+            "outLFNDirBase": "/store/group/phys_higgs/hinv",
             "tag_extension": "NanoV12",
             "config": config,
             "data": data,
