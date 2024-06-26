@@ -111,14 +111,33 @@ def run_data():
 def run_mc():
     # map to link the needed campaign and driver
     year_campaign_map = {
-        "2022": {"campaign": "22", "driver": "mc_2022", "GT": "130X_mcRun3_2022_realistic_v5"},
-        "2022_EE": {"campaign": "22EE", "driver": "mc_2022_EE", "GT": "130X_mcRun3_2022_realistic_postEE_v6"},
+        "2022": {
+            "campaign": "22",
+            "driver": "mc_2022",
+            "GT": "130X_mcRun3_2022_realistic_v5",
+        },
+        "2022_EE": {
+            "campaign": "22EE",
+            "driver": "mc_2022_EE",
+            "GT": "130X_mcRun3_2022_realistic_postEE_v6",
+        },
+        "2023": {
+            "campaign": "23",
+            "driver": "mc_2023",
+            "GT": "130X_mcRun3_2023_realistic_v14",
+        },
+        "2023_BPix": {
+            "campaign": "23BPix",
+            "driver": "mc_2023_BPix",
+            "GT": "130X_mcRun3_2023_realistic_postBPix_v2",
+        },
     }
 
     miniaod = "MiniAODv4"
     tune_energy = "TuneCP5_13p6TeV"
     njets = ["1J", "2J"]
     pts_vjet = ["40to100", "100to200", "200to400", "400to600", "600"]
+    ht_qcd = ["40to70","70to100","100to200","200to400","400to600","600to800","800to1000","1000to1200","1200to1500","1500to2000","2000"]
 
     # list of MC samples to run over
     datasets_map = {
@@ -131,7 +150,6 @@ def run_mc():
             f"{higgs}_M-125_{tune_energy}_powheg-minlo-pythia8"
             for higgs in [
                 "WminusHto2Zto4Nu_Wto2Q",
-                "WminusH2Zto4Nu_Wto2Q",
                 "WplusHto2Zto4Nu_Wto2Q",
                 "ZHto2Zto4Nu_Zto2Q",
             ]
@@ -167,6 +185,7 @@ def run_mc():
         # Minor backgrounds
         "Diboson": [f"{vv}_{tune_energy}_pythia8" for vv in ["WZ", "WW", "ZZ"]],
         "ttbar": [f"{tt}_{tune_energy}_powheg-pythia8" for tt in ["TTto2L2Nu", "TTto4Q", "TTtoLNu2Q"]],
+        "QCD_multijet": [f"QCD-4Jets_HT-{HT}_{tune_energy}_madgraphMLM-pythia8" for HT in ht_qcd],
     }
 
     for year, info in year_campaign_map.items():
