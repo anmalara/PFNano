@@ -35,6 +35,11 @@
 #include "DataFormats/PatCandidates/interface/Electron.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
 
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TH1.h"
+
 //
 // class declaration
 //
@@ -67,6 +72,7 @@ private:
   edm::EDGetTokenT<edm::View<pat::Muon>> muonToken_;
   edm::EDGetTokenT<edm::View<pat::Electron>> electronToken_;
   edm::EDGetTokenT<edm::View<pat::Photon>> photonToken_;  
+  edm::EDGetTokenT<GenEventInfoProduct> genInfoToken_;
   // Pt thresholds for each object
   double metPtThresh_;
   unsigned int nJetMinThresh_;
@@ -74,6 +80,10 @@ private:
   double electronPtThresh_;
   double muonPtThresh_;
   double photonPtThresh_;
+  TH1F* h_nTotalEvents;
+  TH1F* h_nTotalWeightedEvents;
+  TH1F* h_nFilteredvents;
+  TH1F* h_nFilteredventsWeighted;
 };
 
 //
@@ -88,6 +98,7 @@ private:
 // constructors and destructor
 //
 NanoFilter::NanoFilter(const edm::ParameterSet& iConfig) {
+  genInfoToken_ = consumes<GenEventInfoProduct>(edm::InputTag("generator"));
   jetToken_ = consumes<edm::View<pat::Jet>>(iConfig.getParameter<edm::InputTag>("jets"));
   metToken_ = consumes<edm::View<pat::MET>>(iConfig.getParameter<edm::InputTag>("met"));
   muonToken_ = consumes<edm::View<pat::Muon>>(iConfig.getParameter<edm::InputTag>("muons"));
@@ -99,6 +110,11 @@ NanoFilter::NanoFilter(const edm::ParameterSet& iConfig) {
   electronPtThresh_ = iConfig.getParameter<double>("electronPtMin");
   muonPtThresh_ = iConfig.getParameter<double>("muonPtMin");
   photonPtThresh_ = iConfig.getParameter<double>("photonPtMin");
+  edm::Service<TFileService> fs;
+  h_nTotalEvents = fs->make<TH1F>("nTotalEvents", "Number of total events", 1, 0.5, 1.5);
+  h_nTotalWeightedEvents = fs->make<TH1F>("nTotalWeightedEvents", "Number of total weighted events", 1, 0.5, 1.5);
+  h_nFilteredvents = fs->make<TH1F>("nFilteredvents", "Number of filtered events", 1, 0.5, 1.5);
+  h_nFilteredventsWeighted = fs->make<TH1F>("nFilteredventsWeighted", "Number of filtered weighted events", 1, 0.5, 1.5);
 }
 
 NanoFilter::~NanoFilter() {
@@ -169,6 +185,21 @@ bool NanoFilter::hasPhotons(edm::Event& iEvent) {
 
 // ------------ method called on each new Event  ------------
 bool NanoFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup) {
+
+  h_nTotalEvents->Fill(1.0);
+
+  // Retrieve event weight from the event
+  double weight = 1.0;  // Default weight is 1.0 if no other weight is available
+  if (! iEvent.isRealData()) {
+    // For MC, the weight can be obtained from the GenEventInfoProduct
+    edm::Handle<GenEventInfoProduct> genInfo;
+    iEvent.getByToken(genInfoToken_, genInfo);
+    if (genInfo.isValid()) {
+      weight = genInfo->weight();
+    }
+  }
+  h_nTotalWeightedEvents->Fill(1.0, weight);
+
   edm::Handle<edm::View<pat::Jet>> jets;
   edm::Handle<edm::View<pat::MET>> mets;
 
@@ -180,13 +211,29 @@ bool NanoFilter::filter(edm::Event& iEvent, const edm::EventSetup& iSetup) {
   if ((*jets)[0].pt() < jetPtThresh_) { return false; }
 
   // Check for leptons
-  if ( hasElectrons(iEvent) ) { return true; }
-  if ( hasMuons(iEvent) )     { return true; }
-  if ( hasPhotons(iEvent) )   { return true; }
+  if ( hasElectrons(iEvent) ) {
+     h_nFilteredvents->Fill(1.0);
+     h_nFilteredventsWeighted->Fill(1.0, weight);
+     return true;
+     }
+  if ( hasMuons(iEvent) )     {
+     h_nFilteredvents->Fill(1.0);
+     h_nFilteredventsWeighted->Fill(1.0, weight);
+     return true;
+     }
+  if ( hasPhotons(iEvent) )   {
+     h_nFilteredvents->Fill(1.0);
+     h_nFilteredventsWeighted->Fill(1.0, weight);
+     return true;
+     }
 
   // If there are no leptons, check for high MET
    const pat::MET &met = mets->front();
-   if (met.pt() > metPtThresh_) { return true; }
+   if (met.pt() > metPtThresh_) {
+     h_nFilteredvents->Fill(1.0);
+     h_nFilteredventsWeighted->Fill(1.0, weight);
+     return true;
+     }
 
   return false;
 }

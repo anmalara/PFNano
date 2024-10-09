@@ -4,6 +4,33 @@ import os
 from utils.colors import green, blue
 
 
+def modify_file(file_path):
+
+    with open(file_path, "r") as file:
+        lines = file.readlines()
+
+    modified_lines = []
+
+    # Loop through each line and add modifications when the match is found
+    for line in lines:
+        modified_lines.append(line)
+
+        if "outputCommands=process.NANOAOD" in line and "EventContent.outputCommands," in line:
+            modified_lines.append(
+                '    SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring("nanoAOD_step")),\n'
+            )
+
+        if "Additional output definition" in line:
+            modified_lines.append(
+                'process.TFileService = cms.Service("TFileService", fileName=cms.string("histograms.root"))\n'
+            )
+
+    with open(file_path, "w") as file:
+        file.writelines(modified_lines)
+
+    print(f"File '{file_path}' successfully modified.")
+
+
 def create_driver(name, info):
     GT = info["GT"]
     type = info["type"]
@@ -23,9 +50,11 @@ def create_driver(name, info):
     os.system(command)
     print(blue("Moved to ./utils/"))
     os.system(f"mv {driver_name}_NANO.py utils/")
+    os.system(f"black utils/{driver_name}_NANO.py")
+    modify_file(f"utils/{driver_name}_NANO.py")
 
 
-def run_data():
+def main():
     year_run_map = {
         "2022_CDE": {"GT": "130X_dataRun3_v2", "type": "data"},
         "2022_FG": {"GT": "130X_dataRun3_PromptAnalysis_v1", "type": "data"},
@@ -35,13 +64,10 @@ def run_data():
         "2023": {"GT": "130X_mcRun3_2023_realistic_v14", "type": "mc"},
         "2023_BPix": {"GT": "130X_mcRun3_2023_realistic_postBPix_v2", "type": "mc"},
     }
+
     for name, info in year_run_map.items():
         create_driver(name=name, info=info)
 
-
-def main():
-    run_data()
-    # run_mc()
     return
 
 

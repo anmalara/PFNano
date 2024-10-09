@@ -126,12 +126,12 @@ def run_mc():
         "2023": {
             "campaign": "23",
             "driver": "mc_2023",
-            "GT": "130X_mcRun3_2023_realistic_v14",
+            "GT": "130X_mcRun3_2023_realistic_v*",
         },
         "2023_BPix": {
             "campaign": "23BPix",
             "driver": "mc_2023_BPix",
-            "GT": "130X_mcRun3_2023_realistic_postBPix_v2",
+            "GT": "130X_mcRun3_2023_realistic_postBPix_v*",
         },
     }
 

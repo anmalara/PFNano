@@ -26,6 +26,8 @@ cp $CMSSW_BASE/src/PhysicsTools/PFNano/utils/NanoFilter/plugins/BuildFile.xml $C
 cp $CMSSW_BASE/src/PhysicsTools/PFNano/utils/NanoFilter/plugins/NanoFilter.cc $CMSSW_BASE/src/PhysicsTools/NanoFilter/plugins/NanoFilter.cc
 
 source setup.sh
+
+python3 -m pip install black
 ```
 
 Remeber to source the `setup.sh` file at each login.
@@ -52,7 +54,14 @@ If you want to apply filters, remember to apply this line to `cms.OutputModule`.
 ```
 SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring("nanoAOD_step")),
 ```
+
 Remember to also define an EDFilter.
+Currently this is done within the setup/installation.
+Since this filter stores histograms, you **MUST** include this line:
+```
+process.TFileService = cms.Service("TFileService", fileName=cms.string("histograms.root"))
+```
+This changes are currenlty implemented wihtin `utils/create_drivers.py`.
 
 
 

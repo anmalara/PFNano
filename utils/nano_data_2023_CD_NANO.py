@@ -81,6 +81,7 @@ process.NANOAODoutput = cms.OutputModule(
 )
 
 # Additional output definition
+process.TFileService = cms.Service("TFileService", fileName=cms.string("histograms.root"))
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag

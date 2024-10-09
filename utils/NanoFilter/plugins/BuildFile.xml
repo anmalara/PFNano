@@ -2,4 +2,7 @@
 <use name="FWCore/ParameterSet"/>
 <use name="FWCore/PluginManager"/>
 <use name="DataFormats/PatCandidates"/>
+<use name="FWCore/ServiceRegistry"/>
+<use name="SimDataFormats/GeneratorProducts"/>
+<use name="PhysicsTools/HepMCCandAlgos"/>
 <flags EDM_PLUGIN="1"/>

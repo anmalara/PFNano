@@ -21,8 +21,7 @@ process.load("Configuration.StandardSequences.EndOfProcess_cff")
 process.load("Configuration.StandardSequences.FrontierConditions_GlobalTag_cff")
 
 process.maxEvents = cms.untracked.PSet(
-    input=cms.untracked.int32(-1),
-    output=cms.optional.untracked.allowed(cms.int32, cms.PSet),
+    input=cms.untracked.int32(-1), output=cms.optional.untracked.allowed(cms.int32, cms.PSet)
 )
 
 # Input source
@@ -75,16 +74,14 @@ process.NANOAODoutput = cms.OutputModule(
     "NanoAODOutputModule",
     compressionAlgorithm=cms.untracked.string("LZMA"),
     compressionLevel=cms.untracked.int32(9),
-    dataset=cms.untracked.PSet(
-        dataTier=cms.untracked.string("NANOAOD"),
-        filterName=cms.untracked.string(""),
-    ),
+    dataset=cms.untracked.PSet(dataTier=cms.untracked.string("NANOAOD"), filterName=cms.untracked.string("")),
     fileName=cms.untracked.string("nano_data_2022_CDE_NANO.root"),
     outputCommands=process.NANOAODEventContent.outputCommands,
     SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring("nanoAOD_step")),
 )
 
 # Additional output definition
+process.TFileService = cms.Service("TFileService", fileName=cms.string("histograms.root"))
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
