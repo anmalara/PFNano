@@ -70,6 +70,16 @@ This changes are currenlty implemented wihtin `utils/create_drivers.py`.
 For crab submission a handler script `utils/crabby.py`, a crab baseline template `utils/template_crab.py` are provided. 
 Yaml files are also provided: one per `data/mc`, `year` and sample: `card_{type}_{year}_{sample}.yml`.
 
+The crab baseline template `utils/template_crab.py` contains the following line:
+
+```bash
+config.JobType.scriptExe = "utils/ScriptExe.sh"
+config.JobType.inputFiles = ["utils/mergeHistogramInFile.py"]
+```
+
+This allows to run the self-created script rather than the simple `cmsRun` command. For more details, have a look at the scripts.
+
+
 `crabby.py` has the following options:
 - make:
   ```
@@ -78,6 +88,10 @@ Yaml files are also provided: one per `data/mc`, `year` and sample: `card_{type}
 - submit
   ```
   python3 utils/crabby.py -c utils/cards/card_{type}_{year}_{sample}.yml --submit
+  ```
+- status
+  ```
+  python3 utils/crabby.py -c utils/cards/card_{type}_{year}_{sample}.yml --status
   ```
 - resubmit
   ```

@@ -8,6 +8,8 @@ config.General.transferLogs = True
 
 config.JobType.pluginName = "Analysis"
 config.JobType.psetName = "_psetName_"
+config.JobType.scriptExe = "utils/ScriptExe.sh"
+config.JobType.inputFiles = ["utils/mergeHistogramInFile.py"]
 config.JobType.maxMemoryMB = 5000
 config.JobType.numCores = 4
 config.JobType.allowUndistributedCMSSW = True

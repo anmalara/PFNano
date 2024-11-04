@@ -104,8 +104,10 @@ def main():
                 "_outLFNDirBase_": f"{card['outLFNDirBase']}/{tag_extension}/",
                 "_storageSite_": card["storageSite"],
                 "_publication_": "True",
-                "_splitting_": "FileBased",
-                "_unitsPerJob_": "1",
+                # "_splitting_": "FileBased",
+                # "_unitsPerJob_": "1",
+                "_splitting_": "EventAwareLumiBased",
+                "_unitsPerJob_": "100000",
                 "_outputDatasetTag_": tag,
             }
             verbatim_lines = []

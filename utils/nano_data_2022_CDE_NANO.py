@@ -75,7 +75,7 @@ process.NANOAODoutput = cms.OutputModule(
     compressionAlgorithm=cms.untracked.string("LZMA"),
     compressionLevel=cms.untracked.int32(9),
     dataset=cms.untracked.PSet(dataTier=cms.untracked.string("NANOAOD"), filterName=cms.untracked.string("")),
-    fileName=cms.untracked.string("nano_data_2022_CDE_NANO.root"),
+    fileName=cms.untracked.string("nano_data_2022_CDE_NanoAOD.root"),
     outputCommands=process.NANOAODEventContent.outputCommands,
     SelectEvents=cms.untracked.PSet(SelectEvents=cms.vstring("nanoAOD_step")),
 )

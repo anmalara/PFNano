@@ -1,12 +1,22 @@
 #!/bin/bash
 
-# Add some space at the beginning for better readability in the logs
+echo "===================================================================================================="
+echo "ScriptExe.sh: Step -1: Input Arguments"
+echo "===================================================================================================="
+echo $@
+
+
+echo "===================================================================================================="
+echo "ScriptExe.sh: Step 0: Dumping PSet"
+echo "===================================================================================================="
+python3 -c "import PSet; print(PSet.process.dumpPython())"
+
 
 echo "===================================================================================================="
 echo "ScriptExe.sh: Step 1: Make Skim NanoAOD"
 echo "===================================================================================================="
-echo "Executing: cmsRun utils/nano_mc_2022_NANO.py"
-cmsRun utils/nano_mc_2022_NANO.py
+echo "Executing: cmsRun PSet.py"
+cmsRun -j FrameworkJobReport.xml -p PSet.py
 if [ $? -ne 0 ]; then
   echo "Error: cmsRun failed. Exiting."
   exit 1
@@ -36,8 +46,6 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-echo "Removing intermediate file histograms.root"
-rm histograms.root
 
 # Add some space for better readability in the logs
 echo -e "\n\n"
