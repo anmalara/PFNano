@@ -139,7 +139,19 @@ def run_mc():
     tune_energy = "TuneCP5_13p6TeV"
     njets = ["1J", "2J"]
     pts_vjet = ["40to100", "100to200", "200to400", "400to600", "600"]
-    ht_qcd = ["40to70","70to100","100to200","200to400","400to600","600to800","800to1000","1000to1200","1200to1500","1500to2000","2000"]
+    ht_qcd = [
+        "40to70",
+        "70to100",
+        "100to200",
+        "200to400",
+        "400to600",
+        "600to800",
+        "800to1000",
+        "1000to1200",
+        "1200to1500",
+        "1500to2000",
+        "2000",
+    ]
 
     # list of MC samples to run over
     datasets_map = {
