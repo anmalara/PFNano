@@ -31,6 +31,8 @@ def dasgoclient(commands, fname, overwrite=False, extend=True, remove=False):
                 continue
             samples.append(sample)
 
+    samples = list(filter(lambda x: not "ext" in x, samples))
+
     print(blue(f"Storing {len(samples)} samples:"))
     print(green(f"    -->: {samples}"))
 
@@ -88,6 +90,7 @@ def run_data():
     jetmet = ["JetHT", "MET", "JetMET", "JetMET0", "JetMET1"]
     egamma = ["EGamma", "EGamma0", "EGamma1"]
     muon = ["Muon", "Muon0", "Muon1"]
+    muon = []
     datasets = jetmet + egamma + muon
 
     # map to link the needed tag, driver and run to loop over
