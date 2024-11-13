@@ -18,12 +18,13 @@ mkedfltr NanoFilter
 cd PFNano
 git remote add anmalara git@github.com:anmalara/PFNano.git
 git pull anmalara 13_0_13
-cd $CMSSW_BASE/src
-scram b -j 10
-cd PhysicsTools/PFNano
 
 cp $CMSSW_BASE/src/PhysicsTools/PFNano/utils/NanoFilter/plugins/BuildFile.xml $CMSSW_BASE/src/PhysicsTools/NanoFilter/plugins/BuildFile.xml 
 cp $CMSSW_BASE/src/PhysicsTools/PFNano/utils/NanoFilter/plugins/NanoFilter.cc $CMSSW_BASE/src/PhysicsTools/NanoFilter/plugins/NanoFilter.cc
+
+cd $CMSSW_BASE/src
+scram b -j 10
+cd PhysicsTools/PFNano
 
 source setup.sh
 

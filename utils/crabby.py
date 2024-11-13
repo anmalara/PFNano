@@ -153,7 +153,6 @@ def main():
                 "running",
                 "transferred",
                 "transferring",
-                "unsubmitted",
                 "failed",
             ]
             o = os.popen("crab status " + cfg_dir).read().split("\n")
@@ -162,11 +161,15 @@ def main():
                 if line.startswith("CRAB project directory:"):
                     print(blue(line))  # in python3, print(line) replaces print line
                 if line.startswith("Jobs status"):
-                    for j in range(5):
-                        if len(o[i + j]) < 2:
+                    for j in range(10):
+                        try:
+                         text = o[i + j]
+                        except:
+                         continue
+                        if len(text) < 2:
                             continue
-                        if any(s in o[i + j] for s in status_cases):
-                            print(orange(o[i + j]))
+                        if any(s in text for s in status_cases) and "%" in text and "/" in text:
+                            print(orange(text))
 
                 if "Output dataset" in line:
                     das_name = line.split()[-1]
